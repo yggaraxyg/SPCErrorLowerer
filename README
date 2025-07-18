@@ -1,0 +1,45 @@
+This is a repo derived from the work of:
+
+Sadekar, K., Maier, D., & Ingle, A. (2025). Single-Photon 3D Imaging with Equi-Depth Photon Histograms. 
+In European Conference on Computer Vision (pp. 381-398). Springer, Cham.
+
+this repo SPCErrorLowerer, contrary to it's name, does not truly lower error in SPCs.
+instead, it measures the error of SPCs under different circumstances and settings.
+The intention of this measurement is to create graphs and diagrams displaying the optimal attenuation for several distances, and how Freerunmode differs from standard SPC modes, potentially improving the accuracy of SPC images.
+
+-------------------------------------------------------------------------------------------------
+in order to use this repo, all one must do is run the following command:
+
+python3 ParameterizedTimeEDH.py [1] [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14] [15] [16]
+
+this command creates a set of graphs, though none are the ones we require. the vast majority of them are created to show data on individual runs. they are stored in the TimePhotos file. data of our greater runs and every multiple run is stored in the RunData file. this data, once graphed with graphit.py, will produce the graphs I need to complete this project.
+
+each of these parameters modifies the settings of the camera and the data in the graph produced. an explanation of each variable is below:
+
+[1] - this parameter represents the 'signal' value of the simulation (meaning the intensity of laser in the SPC)
+[2] - this parameter represents the 'background' value of the simulation (meaning the intensity of backround illumination in the scene)
+[3] - this parameter represents the begining value in the attenuation multiplier (Meaning when the command is run, the attenuation multiplier will begin at this value)
+[4] - this parameter represents the ending value in the attenuation multiplier (Meaning when the command is run, the attenuation multiplier will end at this value)
+[5] - this parameter represents the interval of the attenuation multiplier (Meaning when the command is run, the attenuation multiplier will increment up by this value)
+[6] - this parameter represents the max time of a single cycle (Meaning the SPC camera will reset every [this value]th time bin)
+[7] - this parameter represents the number of overall cycles the camera will be active (Meaning when the command is run, the simulation will run for that many time bins)
+[8] - this parameter represents the FWHM (Meaning the length of the laser pulse.)
+[9] - this parameter represents the number of repetitions for each attenuation value (Meaning when the command is run, every attenuation value will run this many sims, and take the average of the data.)
+[10] - this parameter represents the distance from the camera of our pictured object in terms of TMAX.
+[11] - this parameter represents the number of time bins in our Equal-depth histogram (meaning when the command is run, the number of chunks we cut the data into is this value.)
+[12] - this parameter represents the number of pulses (meaning when the command is run, the amount of data we collect will be equal to this value)
+[13] - this parameter represents the deadtime of the SPC (meaning when the command is run, the SPC will be busy for this amount of nanoseconds after each intaken photon)
+(please note the following parameters are booleans, emabled at values (1|inf) and disabled at values (-inf|0))
+[14] - this parameter represents whether or not the simulation will be run in freesrun (asyncronous) mode (enabled) or paralell mode (disabled)
+[15] - this parameter represents whether or not the simulation will run multiple times (yes, this's disablment makes parameters [3-5] and [9] irrelevant.). please note when this is disabled, it will not produce graphable data, merely a smaller data-simulation graph.
+[16] - this parameter represents wheter or not the distance from the camera from our pictured object will vary from repetition to repetion. (yes, this's enablment makes parameter [10] irrelevant.). 
+
+-------------------------------------------------------------------------------------------------
+an example execution is below:
+
+python3 ParameterizedTimeEDH.py 1 4 0 1 0.01 100 1000 1.5 10 0.4 16 10000 75 1 1 0
+
+this will create a multi-run datafile in freerun mode with laser illumination 1 and backround 4. the attenuation will run from 0 to 100%, changing by 1% each repetition-cycle.
+the repetition-cycles will be 10 repeitions long, and will average out the values. the SPC will NOT reset every 100 cycles. (this is because freerun mode is on.)
+the whole thing will run for 1000 tbins, and it will intake 10000 pulses. after every pulse, the SPC will deactivate for 75 ns to simulate the delay from data being recorded.
+the laser will fire for 1.5 bins at a time, and the target is 0.4 of the way through 100 cycles. the resultant histogram will have 16 bins.
