@@ -3,12 +3,13 @@ import numpy as np
 import sys
 import matplotlib
 matplotlib.use('TkAgg')
+#plt.style.use('seaborn-v0_8-poster')
 
 if (len(sys.argv)<4):
     print("Reverse (0,1), Same y (0,1), dist (for labeling purposes), and Filename(s) please!")
     exit(-1)
 
-smalltext = {'size' : 5} 
+smalltext = {'size' : 8} 
 
 matplotlib.rc('font', **smalltext)
 
@@ -23,8 +24,8 @@ else:
     box, graphs = plt.subplots(1,int((len(sys.argv)-2)/2),sharey=samey)
     ov6=False
 
-box.set_figheight(10)
-box.set_figwidth(20)
+box.set_figheight(8)
+box.set_figwidth(24)
 if(False==ov6):
     for i in range(int((len(sys.argv)-2)/2)):
     
@@ -40,7 +41,7 @@ if(False==ov6):
                 atad[j] = 1-data[j]
             data = atad
 
-            graphs[i].plot(data,error)
+        graphs[i].plot(data,error)
         bigInterval = np.linspace(data[0],data[-1], int(len(data)/5)+1, True)
         littleInterval = np.linspace(data[0],data[-1], len(data), True)
         graphs[i].grid(True, which = 'both',)
@@ -49,6 +50,8 @@ if(False==ov6):
         graphs[i].fill_between(data, 0, error,facecolor='C0', alpha=1)
         graphs[i].set_title("Error for data in file\n"+filename)
 else:
+    MaxErr=0.0
+    MinErr=0.0
     for i in range(2):
         for l in range(3):
             filename = sys.argv[(3*i+l)+4]
@@ -56,7 +59,14 @@ else:
             info = np.load(filename)
             data = info['data']
             error = info['error']
-        
+            if(samey==False):
+                MaxErr=0.0
+                MinErr=0.0
+            for j in error:
+                if(MaxErr<j):
+                    MaxErr=j
+                if(MinErr>j):
+                    MinErr=j
             if(reverse):
                 atad = [0 for j in range(len(data))]
                 for j in range(len(data)):
@@ -66,34 +76,37 @@ else:
             graphs[i,l].plot(data,error)
             bigInterval = np.linspace(data[0],data[-1], int(len(data)/5)+1, True)
             littleInterval = np.linspace(data[0],data[-1], len(data), True)
-            graphs[i,l].grid(True, which = 'major', linewidth=1.5)
-            graphs[i,l].grid(True, which = 'minor', linewidth=0.75)
+            #graphs[i,l].grid(False, which = 'major', linewidth=1.5)
+            #graphs[i,l].grid(False, which = 'minor', linewidth=0.75)
+            graphs[i,l].grid(False)
             graphs[i,l].set_xticks(bigInterval)
             graphs[i,l].set_xticks(littleInterval, minor=True)
+            graphs[i,l].set_yticks([MinErr,0,MaxErr])
             graphs[i,l].fill_between(data, 0, error,facecolor='C0', alpha=1)
-            titlestring = "freerun "
+            titlestring = "FreeRun "
             if(i==0):
-                titlestring+="off "
+                titlestring+="off"
             else:
-                titlestring+="on "
-            titlestring+=", a centre at "
-            titlestring+=dist
-            titlestring+=" and "
+                titlestring+="on"
+            titlestring+=", "
             if(l==0):
                 titlestring+="0"
             elif(l==1):
                 titlestring+="15"
             else:
                 titlestring+="75"
-            titlestring+="ns deadtime."
+            titlestring+="ns DeadTime"
             
             graphs[i,l].set_title(titlestring,fontsize=12)
-
+    if(samey):
+        for i in range(2):
+            for l in range(3):
+                graphs[i,l].set_yticks([MinErr,0,MaxErr])
     
         
-box.supxlabel("Level Of Attenuation (fraction of light blocked out)", fontsize=18)
-box.supylabel("Error Level (normalized via division by tbins)", fontsize=18)
-box.suptitle("Error Levels With...", fontsize=18)
+box.supxlabel("Level Of Attenuation (fraction of light blocked out)", fontsize=24)
+box.supylabel("Error Level (normalized via division by tbins)", fontsize=24)
+box.suptitle("Effect of optical attenuation for distance fraction "+dist+", phi_sig: 1, phi_bkg: 4", fontsize=24)
 #plt.figure(figsize=(12,4))
 if(samey):
     samstring = "Sharedy"
