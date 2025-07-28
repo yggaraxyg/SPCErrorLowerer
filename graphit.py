@@ -21,19 +21,23 @@ bkg =  sys.argv[4]
 dist = sys.argv[5]
 FWHM = sys.argv[6]
 
-if(int(len(sys.argv)-7)==6):
+numGraphs= int(len(sys.argv)-7)
+
+
+if(numGraphs==6):
     #box, graphs = plt.subplots(2,3,sharey=samey)
     box, graphs = plt.subplots(2,3,sharey=False)
     ov6=True
 else:
-    box, graphs = plt.subplots(1,int((len(sys.argv)-2)/2),sharey=samey)
+    box, graphs = plt.subplots(1,numGraphs,sharey=samey)
     ov6=False
 
+#ov6=false    
+    
 box.set_figheight(8)
 box.set_figwidth(24)
 if(False==ov6):
-    for i in range(int((len(sys.argv)-7)/2)):
-    
+    for i in range(numGraphs):
         filename = sys.argv[i+7]
 
         info = np.load(filename)
@@ -51,14 +55,24 @@ if(False==ov6):
             
         mean = [statistics.mean(error) for j in range(len(data))]
 
-        graphs[i].plot(data,error,data,mean)
-        bigInterval = np.linspace(data[0],data[-1], int(len(data)/5)+1, True)
-        littleInterval = np.linspace(data[0],data[-1], len(data), True)
-        graphs[i].grid(True, which = 'both',)
-        graphs[i].set_xticks(bigInterval)
-        graphs[i].set_xticks(littleInterval, minor=True)
-        graphs[i].fill_between(data, 0, error,facecolor='C0', alpha=1)
-        graphs[i].set_title("Error for data in file\n"+filename)
+        if(numGraphs>1):
+            graphs[i].plot(data,error,data,mean)
+            bigInterval = np.linspace(data[0],data[-1], int(len(data)/5)+1, True)
+            littleInterval = np.linspace(data[0],data[-1], len(data), True)
+            graphs[i].grid(True, which = 'both',)
+            graphs[i].set_xticks(bigInterval)
+            graphs[i].set_xticks(littleInterval, minor=True)
+            graphs[i].fill_between(data, 0, error,facecolor='C0', alpha=1)
+            graphs[i].set_title("Error for data in file\n"+filename)
+        else:
+            graphs.plot(data,error,data,mean)
+            bigInterval = np.linspace(data[0],data[-1], int(len(data)/5)+1, True)
+            littleInterval = np.linspace(data[0],data[-1], len(data), True)
+            graphs.grid(True, which = 'both',)
+            graphs.set_xticks(bigInterval)
+            graphs.set_xticks(littleInterval, minor=True)
+            graphs.fill_between(data, 0, error,facecolor='C0', alpha=1)
+            graphs.set_title("Error for data in file\n"+filename)
 else:
     MaxErr=0.0
     MinErr=0.0

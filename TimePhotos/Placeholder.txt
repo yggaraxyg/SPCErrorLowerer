@@ -1,0 +1,3 @@
+This file exists to ensure that the TimePhotos folder updates in git, as git automatically ignores empty files.
+
+If one wishes, they may delete this file once the library has been installed on their device.
