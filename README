@@ -39,7 +39,8 @@ pip install .
 
 this installs the SPCSimLib library, allowing the file to complete.
 
-If the SPCSimLib library is empty, please go to https://github.com/kaustubh-sadekar/SPCSimLib and import the library from there.
+Due to certain errors, the SPCSimLib folder may be empty.
+If the SPCSimLib folder is empty, please go to https://github.com/kaustubh-sadekar/SPCSimLib and import the library from there.
 
 -------------------------------------------------------------------------------------------------
 Use: Pt 2
