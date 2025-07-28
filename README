@@ -77,7 +77,6 @@ each of these parameters modifies the settings of the camera and the data in the
 Use: Pt 3
 
 After this is done, one can then take the resultant .npz file and graph it's contents with graphit.py
-(please note that not all .npz files in RunData/olderRunData are graphable with graphit.py. if one wishes to graph these graphs, it is reccomended to either use the files named  graphit.py and graphit2.py in the olderFiles folder)
 
 graphit.py is used in the following manner:
 
