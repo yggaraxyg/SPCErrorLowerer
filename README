@@ -51,7 +51,7 @@ python3 ParameterizedTimeEDH.py [1] [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [1
 
 this command creates a set of graphs, though none are the ones we require. the vast majority of them are created to show data on individual runs. they are stored in the TimePhotos file. data of our greater runs and every multiple run is stored in the RunData file. this data, once graphed with graphit.py, will produce the graphs I need to complete this project.
 
-Please note that repeatedly running this command WILL create many, many graphs in the TimePhotos file. (gigabytes worth) if you do not wish to create graphs, you may remove the hashtag before the three apostrophes on line 121,
+Please note that repeatedly running this command WILL create many, many graphs in the TimePhotos file. (Tens of Gigabytes worth.) if you do not wish to create graphs, you may remove the hashtag before the three apostrophes on line 121,
 this will disable saving graphs.
 
 each of these parameters modifies the settings of the camera and the data in the graph produced. an explanation of each variable is below:
@@ -103,7 +103,7 @@ python3 ParameterizedTimeEDH.py 1 3 0 1 0.05 100 1000 1.5 10 0.5 16 10000 50 1 1
 this will create a multi-run datafile in freerun mode with laser illumination 1 and backround 3. the attenuation will run from 0 to 100%, changing by 5% each repetition-cycle.
 the repetition-cycles will be 10 repeitions long, and will average out the values. the SPC will NOT reset every 100 cycles. (this is because freerun mode is on.)
 the whole thing will run for 1000 tbins, and it will intake 10000 pulses. after every pulse, the SPC will deactivate for 50 ns to simulate the delay from data being recorded.
-the laser will fire for 1.5 bins at a time, and the target is 0.4 of the way through 100 cycles. the resultant histogram will have 16 bins.
+the laser will fire for 1.5 ns, and the target is 0.4 of the way through 100 cycles. the resultant histogram will have 16 bins.
 
 the error will be saved in the following file:
 
@@ -116,4 +116,9 @@ python3 graphit.py 0 1 1 3 0.5 1.5 RunData/free-True-sig-1.0000-bkg-3.0000-tmax-
 which would then save the graph under the name
 
 Graphs/sig-1-bkg-3FWHM-1.5-dist-0.5-Sharedy-Depth.png
+
+-------------------------------------------------------------------------------------------------
+all write-up information is in the WriteUp folder, in the files Report and Slides.
+
+Please note the write up is currently incomplete due to the fact that until monday morning I was fully unable to access my experiment data
 
