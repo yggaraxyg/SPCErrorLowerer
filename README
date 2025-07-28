@@ -89,16 +89,49 @@ graphit.py [1] [2] [3] [4] [5] [6] [7] [8]...[inf]
 [5] - this parameter represents the true distance from the camera of the input dataset (Note this need not match the data, it is for labeling purposes only)
 [6] - this parameter represents the FWHM of the input dataset (Note this need not match the data, it is for labeling purposes only)
 [7] - this is the name of the file you want to graph.
-[8...inf] (optional) -these are the names of more files that you want to graph. graphs will be shown in a row.  please note that if you try to graph exactly 6 files the program will assume you are trying to make a graph showing the difference between freeRunMode and non-freeRunMode for deadtimes 0, 15, and 75. while there is no parameter to disable this, you can uncomment line 32 to disable this.
+[8...inf] (optional) - these are the names of more files that you want to graph. graphs will be shown in a row.  please note that if you try to graph exactly 6 files the program will assume you are trying to make a graph showing the difference between freeRunMode and non-freeRunMode for deadtimes 0, 15, and 75. while there is no parameter to disable this, you can uncomment line 32 to disable this.
 
 the graph will be saved to the Graphs file.
+-------------------------------------------------------------------------------------------------
+Use: Pt 4
+
+after preparing runData and graphing said data, it might occur to one to run statistical analysis on said data. as such, I have prepared two programs for analytical use. the first program is repackager.py. repackager.py takes in multiple .npz files, retrieves errorWidth and errorDepth (the error values for the width and depth calculations of histograms), then puts them together in one alrge .npz file. while it is indended to take in both errorWidth and erorrDepth, commenting and uncommenting the lines lines 12 16 and 20 allows one to repackage just one of the two if one wishes.
+
+repackager.py is used in the following manner:
+
+repackager.py  [1] [2]...[inf]
+
+[1] - this parameter represents the name of the file all input files are to be repackaged into. the file should end with .npz, and it need not exist before running this command
+[2] - this parameter represents the name of the first file which will be repackaged.
+[3...inf] (optional) - this parameter represents the name of the other files to be repackaged.
+
+If one is choosing to run a paired t-test, one must be certain to put in filenames in the EXACTLY the same order both times. the repackager WON'T sort them for you.
 
 -------------------------------------------------------------------------------------------------
-Example:
+Use: Pt 5
 
-an example execution is below:
+once data has been repackaged, all one needs to do to run a statistical test is use the statrun.py program. statrun.py is a program that either runs a paired t-test or a two-sample t-test on two .npz files. 
 
+statrun.py  is used in the following manner:
+
+statrun.py [1] [2] [3] [4] [5]
+
+[1] - this parameter represents wheter the test will be a two sample t-test (0 and less) or a paired t-test. (1 and more)
+[2] - this parameter represents	if the alternate hypothesis is that M1 < M2 (-1 and less), M1 != M2 (0), or M1 > M2 (1 and more).
+[3] - this parameter represents the alpha of all tests.
+[4] - this parameter is the name of dataset 1
+[5] - this parameter is the name of dataset 2
+
+-------------------------------------------------------------------------------------------------
+Example 1:
+
+This example is meant to display the graphing functions of this program.
+
+first, we simulate our data with the following line of code:
+
+=
 python3 ParameterizedTimeEDH.py 1 3 0 1 0.05 100 1000 1.5 10 0.5 16 10000 50 1 1
+=
 
 this will create a multi-run datafile in freerun mode with laser illumination 1 and backround 3. the attenuation will run from 0 to 100%, changing by 5% each repetition-cycle.
 the repetition-cycles will be 10 repeitions long, and will average out the values. the SPC will NOT reset every 100 cycles. (this is because freerun mode is on.)
@@ -111,13 +144,46 @@ RunData/free-True-sig-1.0000-bkg-3.0000-tmax-100.0-tbins-1000-FWHM-1.5-reps-10-c
 
 and to graph it one would might use the following command:
 
+=
 python3 graphit.py 0 1 1 3 0.5 1.5 RunData/free-True-sig-1.0000-bkg-3.0000-tmax-100.0-tbins-1000-FWHM-1.5-reps-10-cent-0.50-bins-16-pulses-10000-deadtime-50.npz
+=
 
 which would then save the graph under the name
 
 Graphs/sig-1-bkg-3FWHM-1.5-dist-0.5-Sharedy-Depth.png
 
 -------------------------------------------------------------------------------------------------
+Example 2: 
+
+this exampel is emnet to display the statistical analysis functions of this program.
+
+in order to display our analysis, we need at least two sets of data. in order to do this, we will use bash to run the data-collection line of code multiple times. 
+
+=
+for i in 0 15 75; do for j in 0 1;do python3 ParameterizedTimeEDH.py 1 3 0 1 0.05 100 100 1.5 5 0.5 16 1000 $i $j 1; done; done
+=
+
+now that we have our six datasets, we need to repackage them to fit our needs. just as an example, we're going to check if there's a difference between the results of freerunmode and non-feerunmode.
+to do that, we just specify what's different in the filenames. thankfully, the asterisk always gives it's results in the order of ASCII.
+
+NOTE: This assumes you have deleted the RunData from example 1. if you have not, statrun will not work.
+
+=
+python3 repackager.py Free.npz RunData/free-True-sig-1.0000-bkg-3.0000*
+python3 repackager.py NotFree.npz RunData/free-False-sig-1.0000-bkg-3.0000*
+=
+
+now then, we have our full dataset. all we need to do is run our tests. all we need now is to run the command
+
+=
+python3 statrun.py 1 0 0.05 Free.npz NotFree.npz
+=
+
+following this, the program will print out the results of the T-Test.
+
+-------------------------------------------------------------------------------------------------
+Reports:
+
 all write-up information is in the WriteUp folder, in the files Report and Slides.
 
 Please note the write up is currently incomplete due to the fact that until monday morning I was fully unable to access my experiment data

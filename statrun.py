@@ -3,18 +3,17 @@ import numpy as np
 import scipy
 import statistics
 
-if (len(sys.argv)!=7):
-    print("paired (0,1), less or greater (0,1), alpha, output and 2  Filenames please!")
+if (len(sys.argv)!=6):
+    print("paired (0,1), less or greater (0,1), alpha, and 2  Filenames please!")
     exit(-1)
 
 np.set_printoptions(threshold=np.inf, precision = 10000, suppress=True)
 
 Paired = (int(sys.argv[1])>0)
-lessgreat = (int(sys.argv[2])>0)
+lessgreat = int(sys.argv[2])
 alpha = float(sys.argv[3])
-output = sys.argv[4]
-data1 = sys.argv[5]
-data2 = sys.argv[6]
+data1 = sys.argv[4]
+data2 = sys.argv[5]
 
 info1 = np.load(data1)
 error1 = info1['error']
@@ -28,10 +27,12 @@ for i in range(len(error2)):
 
 #print(error1)
 #print(error2)
-if(lessgreat):
-    alternative='greater' #true, 1 and more
+if(lessgreat>0):
+    alternative = 'greater' 
+elif(lessgreat==0):
+    alternative = 'two-sided'
 else:
-    alternative='less' #false, 0 and less
+    alternative = 'less' 
     
 if(Paired):
     res = scipy.stats.ttest_rel(error1,error2, alternative = alternative)
@@ -42,9 +43,9 @@ else:
     pvalf = 1-scipy.stats.f.cdf(F, len(error1)-1, len(error2)-1)
     #print(pvalf)
     areVariancesSame = (pvalf <= alpha)
-    print(output+": pvalf: "+str(pvalf)+", alpha: "+str(alpha)+" Same Variance? "+str(areVariancesSame)+" according to F-test.")
-    res = scipy.stats.ttest_ind(error1,error2,equal_var=areVariancesSame, alternative= 'greater')
+    print("pvalf: "+str(pvalf)+", alpha: "+str(alpha)+" Same Variance? "+str(areVariancesSame)+" according to F-test.")
+    res = scipy.stats.ttest_ind(error1,error2,equal_var=areVariancesSame, alternative = alternative)
 
 print(res)
 ples= res.pvalue<=alpha
-print(output+": pval: "+str(res.pvalue)+", alpha: "+str(alpha)+", Is P-value less than alpha: "+str(ples))
+print("pval: "+str(res.pvalue)+", alpha: "+str(alpha)+", Is P-value less than alpha: "+str(ples))
