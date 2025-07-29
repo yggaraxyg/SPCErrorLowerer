@@ -167,6 +167,6 @@ if(samey):
 else:
     samstring = "Zoomedy"
 
-plt.savefig(str("Graphs/sig-"+str(sig)+"-bkg-"+str(bkg)+"FWHM-"+str(FWHM)+"-dist-"+dist+"-"+samstring+"-"+labStr+".png"))
+plt.savefig(str("Graphs/sig-"+str(sig)+"-bkg-"+str(bkg)+"-FWHM-"+str(FWHM)+"-dist-"+dist+"-"+samstring+"-"+labStr+".png"))
 print(dist+" done.")
 #plt.show()

@@ -1,0 +1,60 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{ynt/global//global/global}
+    \entry{spc}{article}{}
+      \name{author}{3}{}{%
+        {{hash=c0e4e30e106c395531988c98b758c08c}{%
+           family={Sadekar},
+           familyi={S\bibinitperiod},
+           given={Kaustubh},
+           giveni={K\bibinitperiod}}}%
+        {{hash=44d2e85095769540b86df536eb7fb7d4}{%
+           family={Maier},
+           familyi={M\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+        {{hash=1a8ee5d35f13cc197ae1c8a0060d7ce7}{%
+           family={Ingle},
+           familyi={I\bibinitperiod},
+           given={Atul},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{61a0e00449a2f6075a07a25c0b2a00aa}
+      \strng{fullhash}{61a0e00449a2f6075a07a25c0b2a00aa}
+      \strng{bibnamehash}{61a0e00449a2f6075a07a25c0b2a00aa}
+      \strng{authorbibnamehash}{61a0e00449a2f6075a07a25c0b2a00aa}
+      \strng{authornamehash}{61a0e00449a2f6075a07a25c0b2a00aa}
+      \strng{authorfullhash}{61a0e00449a2f6075a07a25c0b2a00aa}
+      \field{labelalpha}{SMI25}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{European Conference on Computer Vision}
+      \field{title}{Single-Photon 3D Imaging with Equi-Depth Photon Histograms}
+      \field{year}{2025}
+      \field{pages}{381\bibrangedash 398}
+      \range{pages}{18}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

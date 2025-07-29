@@ -1,0 +1,7 @@
+@article{spc,
+    author  = {Kaustubh Sadekar and David Maier and Atul Ingle},
+    title   = {Single-Photon 3D Imaging with Equi-Depth Photon Histograms},
+    year    = {2025},
+    journal = {European Conference on Computer Vision},
+    pages   = {381--398}
+}

@@ -25,15 +25,20 @@ for i in range(len(error1)):
 for i in range(len(error2)):
     error2[i] = abs(error2[i])
 
+print(f"Null: Mu of {data1} == Mu of {data2}")
+
 #print(error1)
 #print(error2)
 if(lessgreat>0):
-    alternative = 'greater' 
+    alternative = 'greater'
+    print(f"Alternate: Mu of {data1} > Mu of {data2}")  
 elif(lessgreat==0):
     alternative = 'two-sided'
+    print(f"Alternate: Mu of {data1} != Mu of {data2}")  
 else:
-    alternative = 'less' 
-    
+    alternative = 'less'
+    print(f"Alternate: Mu of {data1} < Mu of {data2}")  
+  
 if(Paired):
     res = scipy.stats.ttest_rel(error1,error2, alternative = alternative)
 else:
