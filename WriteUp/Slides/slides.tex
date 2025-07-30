@@ -17,7 +17,7 @@
 \addbibresource{SPCSimLib.bib}
 
 \title{Determining the accuracy of SPC Pictures taken using Equi-Width Histograms versus Equi-Depth Histograms, Parallel versus Asynchronous Data Collection and 1.5 FWHM versus 5.0 FWHM under variable Attenuation using SPCSimLib \cite{spc}}
-\author{Elliott H. VanOrman, Intern at the Institute for Computing in Research, working for Professor Atul Ingle and Katsubh Sadekar}
+\author{Elliott H. VanOrman, Intern at the Institute for Computing in Research, working for Professor Atul Ingle and Kaustubh Sadekar}
 
 \begin{document}
 
@@ -84,7 +84,13 @@
 
 \begin{frame}
   Before I explain the difference between asynchronous mode and parallel mode, I first need to explain deadtime.
-  Due to the physical limitations of SPC cameras photon readings over time do not always match reality. when a detector is hit by a photon, it takes a certain amount of time for said detector to log a timestamp. While this time is in progress, the detector cannot record new hits. In other words, a detector cannot start recording a new timestamp until it has finished recording the first, meaning photons that hit the detector during that recording time go undetected. This time is usually around 75ns in real life, and is refered to as 'deadtime' \cite{sadekar}
+  \begin{itemize}
+  \item Due to the physical limitations of SPC cameras photon readings over time do not always match reality.
+  \item When a detector is hit by a photon, it takes a certain amount of time for said detector to log a timestamp.
+  \item While this time is in progress, the detector cannot record new hits. In other words, a detector cannot start recording a new timestamp until it has finished recording the first.
+  \item photons that hit the detector during that recording time go undetected.
+  \item This time is usually around 75ns in real life, and is refered to as 'deadtime' \cite{sadekar}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -97,16 +103,29 @@
 
 \begin{frame}
   Then there is FWHM:
-  FWHM, unlike histograms and modes, is a continous measurement of how long each laser pulse fires.
-  FWHM, or Full Width at Half Maximum, refers to the length of the curve of intensity of the laser when it fires. It can also affect the error of the laser, as the increaed length of the laser would also increase the width of the 'peak' of the pulse.
+  \begin{itemize}
+  \item FWHM, unlike histograms and modes, is a continous measurement of how long each laser pulse fires.
+  \item FWHM, or Full Width at Half Maximum, refers to the length of the curve of intensity of the laser when it fires. It can also affect the error of the laser, as the increaed length of the laser would also increase the width of the 'peak' of the pulse.
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
-  Unfortunately, due to the skew in data, it often becomes necesary to filter out a certain percent of incoming photons. This filtering is called 'attenuation' \cite{ingle}, and while it may reduce the overal number of photons hitting an SPC, the fact that any one datapoint blocks other datapoints from being recorded for a period of time causes it to actually increase the amount of photons not blocked by early recordings, reducing the skew of the timestamp data and increasing accuracy. \cite{sadekar}
+  \begin{itemize}
+  \item Unfortunately, due to the skew in data, it often becomes necesary to filter out a certain percent of incoming photons.
+  \item This filtering is called 'attenuation' \cite{ingle}, and it does reduce the overal number of photons hitting an SPC.
+  \item Because of the fact that any one datapoint blocks other datapoints from being recorded for a period of time causes it to actually increase the amount of photons not blocked by early recordings.
+  \item this reduces the skew of the timestamp data and increasing accuracy. \cite{sadekar}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
-  As I have explained, there are many methods that can be used to receive and interpret data from SPCs, but it has not yet been determined which produces the most accurate results. I  hypothesized that Equi-depth histograms would produce more accurate results than Equi-Width histograms, that asynchronous (non-freerunning) mode would produce more accurate results than parallel (freerunning) mode, and that 1.5 FWHM would produce the same amount of error as 5.0 FWHMs.
+  this matters because there are many methods that can be used to receive and interpret data from SPCs, but it has not yet been determined which produces the most accurate results.
+  I hypothesized that...
+  \begin{itemize}
+  \item Equi-depth histograms would produce more accurate results than Equi-Width histograms.
+  \item asynchronous (non-freerunning) mode would produce more accurate results than parallel (freerunning) mode.
+  \item 1.5 FWHM would produce the same amount of error as 5.0 FWHMs.
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -114,7 +133,16 @@
 \end{frame}
 
 \begin{frame}
-  In order to determine what produced the most accurate results, I used the Python library SPCSimLib \cite{spc} to simulate a pixel of an SPC. To find error, I simulated taking a picture with an SPC. Then I subtractws the 'true distance' (the real distance from the camera in the simulation) from the 'estimated distance' (the distance the camera estimated). After taking this difference, I normalized it by dividing it by the scale of the distance. This normalized difference is what I refer to when I say 'error'. To miminize the error in my error measurements caused by fluctuations in my error measurements, I did this ten times and took the average for each set of values. After taking error measurements for every whole numbered percentage value of attenuation, I put this data into a file, labeled it with the settings the SPC used while simulations were being taken, then changed the settings and repeated the process in order get the data I analyzed. 
+  In order to determine what produced the most accurate results, I used the Python library SPCSimLib \cite{spc} to simulate a pixel of an SPC. To find error, I...
+  \begin{enumerate}
+  \item Simulated taking a picture with the pixel.
+  \item Subtracted the 'true distance' (the real distance from the camera in the simulation) from the 'estimated distance' (the distance the camera estimated).
+  \item Normalized said distance from -1 to 1 by dividing it by the scale of the distance (tbins). (This normalized difference is what I refer to when I say 'error'.)
+  \item Repeated the previous three steps ten times and took the average for each set of values. (to reduce fluctuations)
+  \item Repeated the previous four steps one hundred and one times, each time incrementing the attenuation multiplier by 0.01.
+  \item Put the resultant data into a file labeled  with the settings the SPC used while simulations were being taken.
+  \item then I changed the settings and repeated all previous steps until I had run out of combinations of settings to test.
+  \end{enumerate}
 \end{frame}
 
 \begin{frame}
@@ -133,7 +161,15 @@
 \end{frame}
 
 \begin{frame}
-  The top graph and the bottom graph present the same data in two different formats. The top graph represents error on the same scale across all graphs, while the bottom represents each dataset with it's own scale. Blue represents normalized error. Orange is the mean error for all attenuation values. Red is the attenuation value which produced the least accurate result. Green is the attenuation value which produced the most accurate result.
+  The top graph and the bottom graph present the same data in two different formats.
+  \begin{itemize} 
+  \item The top graph represents error on the same scale across all graphs.
+  \item The bottom represents each dataset with it's own scale.
+  \item Blue represents normalized error.
+  \item Orange is the mean error for all attenuation values.
+  \item Red is the attenuation value which produced the least accurate result.
+  \item Green is the attenuation value which produced the most accurate result.
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -166,7 +202,6 @@
     \item $\mu_{1.5}<\mu_{5.0}$: $p=0$
     \end{itemize}
   \end{itemize}
-  
   I rejected the null for all alternatve hypotheses with p-values less than 0.01. Graphs showing examples of the accepted hypotheses are as follows:
 \end{frame}
 
@@ -229,7 +264,7 @@
 \end{frame}
 
 \begin{frame}
-  While some of these results were different from my expectations, they are still explainable observations. Some possible (but not necesarily correct) explanations are as follows:
+  While some of these results were different from my expectations, they are still explainable observations. Some \underline{possible (but not necesarily correct)} explanations are as follows:
   \begin{itemize}
   \item EDH error calculation may be prone to overvaluing shorter but wider peaks like the ones produced by skewed data and undervaluing tall but thin peaks like the ones produced at the actual peak, while EWH error calculation simply measures the highest bucket.
   \item FreeRun simulations are less prone to producing skewed data, as the point where individual detectors start detecting photons within a cycle varies, thus allowing photons from later into each cycle hit the detector more often.
@@ -259,7 +294,13 @@
 \end{frame}
 
 \begin{frame}
-  As Single Pixel Cameras develop and their use increases, it is important to know what settings will allow said SPCs to produce the most accurate pictures. After I repeatedly simulated  individual pixels of SPC cameras across several settings to collect enough data, I found that calculating error with EWH error calculation, Asynchronous Data Collection and 1.5 FWHM lasers produced the most accurate results. This implies that to produce highly-accurate pictures for SPC cameras, one should use said settings. From this, I propose that these become standard settings for SPC cameras, and suggest that more research be done into FWHM to figure out the optimal FWHM.
+   As Single Pixel Cameras develop and their use increases, it is important to know what settings will allow said SPCs to produce the most accurate pictures.
+  \begin{itemize}
+  \item I found that calculating error with EWH error calculation, using Asynchronous Data Collection and 1.5 FWHM lasers produced the most accurate results.
+  \item This implies that to produce highly-accurate pictures for SPC cameras, one should use said settings.
+  \item From this, I propose that these become standard settings for SPC cameras.
+  \item I also suggest that more research be done into FWHM to figure out the optimal FWHM.
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
