@@ -185,7 +185,26 @@ following this, the program will print out the results of the T-Test.
 -------------------------------------------------------------------------------------------------
 Reports:
 
-all write-up information is in the WriteUp folder, in the files Report and Slides.
+all write-up information is in the WriteUp folder, in the files Report and Slides, under the names Report.tex and slides.tex
 
-Please note the write up is currently incomplete due to the fact that until monday morning I was fully unable to access my experiment data
+To compile my writeup, one needs a LaTeX distro from  2025 or later, and to install the package Biber with the following command:
+
+sudo apt install texlive-bibtex-extra
+
+To compile my write-up, one needs to input the following five commands:
+
+pdflatex [name].tex
+
+biber [name]
+
+pdflatex [name].tex
+
+pdflatex [name].tex
+
+pdflatex [name].tex
+
+
+where [name] is either Report or slides depending on what one is attempting to compile
+
+(I am aware four of the five lines are exactly the same. Each compilation is important. Do not skip this step or the bibliography will not load.)
 
