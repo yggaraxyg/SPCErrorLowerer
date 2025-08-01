@@ -17,7 +17,7 @@ sorting=ynt
 \addbibresource{SPCSimLib.bib}
 
 \title{Determining the accuracy of FreeRunning mode versus Parallel mode as well as the accuracy of Equi-Width Histograms versus Equi-Depth Histograms under variable Attenuation using SPCSimLib \cite{spc}}
-\author{NotSureHowManyPeopleIShouldPutHere \& Elliott H. VanOrman}
+\author{Elliott VanOrman, intern with the Institute for Computing in Research}
 
 \begin{document}
 \maketitle
@@ -33,7 +33,7 @@ from this, we concluded that using Equi-Width Histograms, Asynchronous data coll
 
 Single Photon Cameras, or 'SPC's for short, are cameras that function similarly to LIDAR, in that they produce 3D photographs by measuring the time it takes for light to travel to a point and bounce back. Unlike LIDAR however, SPCs use individual photons instead of lasers. \cite{ingle} \cite{sadekar}
 
-When a picture is taken, the SPC begins sending out pulses of photons towards the thing it is taking a picture of. When these photons are reflected back onto the detector, it records the timestamp. We can then calculate the distance away from our camera using the formula\[\frac{T*\frac{1}{2}}{C}\] where $T$ is the time it took photons to reflect back to the detector and $C$ is the speed of light. \cite{sadekar}
+When a picture is taken, the SPC begins sending out pulses of photons towards the thing it is taking a picture of. When these photons are reflected back onto the detector, it records the timestamp. We can then calculate the distance away from our camera using the formula \[D=C*T*\frac{1}{2}\] where $D$ is distance, $T$ is the time it took photons to reflect back to the detector and $C$ is the speed of light. \cite{sadekar}
 
 There are almost always ambient photon levels, however, meaning that while timestamps do cluster around the 'true' time it took photons to reflect back, there are a certain number of 'noise' timestamps due to background illumination. There are multiple methods to determine when the true center of the pulse (called the 'peak') is located. After the 'peak' is located, it is used as $T$ in the previously shown formula \cite{sadekar}.
 
@@ -56,16 +56,27 @@ Due to the physical limitations of SPC cameras photon readings over time do not 
 
 There are two modes in which one collects data: \cite{sadekar}
 \begin{itemize}
-\item Parallel (or, Not Freerun) Mode. In Parallel mode, detectors are reset at the beginning of each pulse, resetting their deadtime, but timestamp data will be skewed to the right as early photons will block later photons
-\item Asynchronous (or, Freerun) Mode. In Asynchronous mode, detectors are allowed to run until their deadtime elapses in full, but their timestamp data will be less skewed.
+\item Parallel (or, Not FreeRunning) Mode. In Parallel mode, detectors are reset at the beginning of each pulse, prematurely ending their deadtime. due to earlier photons blocking out later photons however, this often results in right-skewed timestamp data.
+\item Asynchronous (or, FreeRunning) Mode. In Asynchronous mode, detectors are allowed to run until their deadtime elapses in full. This takes in less photons, but produces more uniform data.
 \end{itemize}
 
-Unfortunately, due to the skew and issues in data, it often becomes necesary to filter out a certain percent of incoming photons. this filtering is called 'attenuation', \cite{ingle} and while it may reduce the overal number of photons hitting an SPC, the fact that any one datapoint blocks other datapoints from being recorded for a period of time causes it to actually increase the amount of photons not blocked by early recordings, reducing the skew  of the data and increasing accuracy.  \cite{sadekar}
+Then there is how long the laser fires, measured by taking the Full Width at Half Maximum of the parabola measuring the intensity of the laser:
+\begin{itemize}
+\item FWHM, unlike histograms and modes, is a continous measurement of how long each laser pulse fires.
+\item FWHM, or Full Width at Half Maximum, refers to the length of the curve of intensity of the laser when it fires. It can also affect the error of the laser, as the increaed length of the laser would also increase the width of the 'peak' of the pulse.
+\end{itemize}
 
-As we have explained, there are many methods that can be used to receive and interpret data from SPCs, but it has not yet been determined which produces the most accurate results. It was hypothesized that Equi-depth histograms would produce more accurate results than Equi-Width histograms, that asynchronous (non-freerunning) mode would produce more accurate results than parallel (freerunning) mode, and that 1.5 FWHM would produce the same amount of error as 5.0 FWHMs.
+Unfortunately, due to right-skewed data, it often becomes necesary to filter out a certain percent of incoming photons. this filtering is called 'attenuation', \cite{ingle} and while it may reduce the overal number of photons hitting an SPC, the fact that any one datapoint blocks other datapoints from being recorded for a period of time causes it to actually increase the amount of photons not blocked by early recordings, producing less skewed  data and increasing accuracy.  \cite{sadekar}
 
+As we have explained, there are many methods that can be used to receive and interpret data from SPCs, but it has not yet been determined which produces the most accurate results. It was hypothesized that:
+\begin{itemize}
+  \item Equi-depth histograms with 16 buckets would produce more accurate results than Equi-Width histograms with 1000 buckets
+  \item Asynchronous (non-FreeRunning) mode would produce more accurate results than Parallel (FreeRunning)
+  \item 1.5 FWHM lasers would produce the same amount of error as 5.0 FWHM lasers.
+\end{itemize}
+  
 \section*{Method}
-In order to determine what produced the most accurate results, we used the Python library SPCSimLib \cite{spc} to simulate a pixel of an SPC. To find error, we simulated taking a picture with an SPC. We then subtracted the 'true distance' (The distance from the camera the surface being photographed was in the simulation) from the 'estimated distance' (The distance from the camera of the same surface that the SPC in the simulation estimated). After taking this difference, we normalized it by dividing it by the scale of the distance. This normalized difference is what we refer to when we say 'error'. To miminize the error in our error measurements caused by fluctuations in our error measurements, we did this ten times and took the average. After taking error measurements for every whole numbered percentage value of attenuation, we put this data into a 'dataset', labeled it with the settings the SPC used while simulations were being taken, then saved said dataset to \href{https://github.com/yggaraxyg/SPCErrorLowerer/tree/master/RunData/runDataUsedInInitialProject}{this folder in our project's github repo}. We then changed the settings, and repeated the process in order get the data we analyzed. We then graphed this data in the formats shown below for ease of understanding saving them to \href{https://github.com/yggaraxyg/SPCErrorLowerer/tree/master/Graphs}{this folder in our project's github repo}.
+In order to determine what produced the most accurate results, we used the Python library SPCSimLib \cite{spc} to simulate a pixel of an SPC. To find error, we simulated taking a picture with an SPC. We then subtracted the 'true distance' (The distance from the camera the surface being photographed was in the simulation) from the 'estimated distance' (The distance from the camera of the same surface that the SPC in the simulation estimated). After taking this difference, we normalized it by dividing it by the scale of the distance. This normalized difference is what we refer to when we say 'error'. To miminize the error in our error measurements caused by fluctuations in our error measurements, we did this ten times and took the average. After taking error measurements for every 101 percentage values of attenuation running from 0\% to 100\%, we put this data into a 'dataset', labeled it with the settings the SPC used while simulations were being taken, then saved said dataset to \href{https://github.com/yggaraxyg/SPCErrorLowerer/tree/master/RunData/runDataUsedInInitialProject}{this folder in our project's github repo}. We then changed the settings, and repeated the process in order get the data we analyzed. We then graphed this data in the formats shown below for ease of understanding saving them to \href{https://github.com/yggaraxyg/SPCErrorLowerer/tree/master/Graphs}{this folder in our project's github repo}.
 
 \begin{figure}[H]
 \centering
@@ -86,19 +97,19 @@ In addition, we ran statistical analysis on the data to check our hypotheses. To
 \section*{Results}
 Using Paired t-tests, we found the following $T$s and P-Values for the following hypotheses:
 \begin{itemize}
-  \item $\mu_{EDH}=\mu_{EWH}$: $T=14.59122$
+  \item $\mu_{EDH}=\mu_{EWH}$: $T=14.59122, df = 96959$ 
   \begin{itemize}
     \item $\mu_{EDH}>\mu_{EWH}$: $p=1.79689\times10^{-48}$
     \item $\mu_{EDH}\neq\mu_{EWH}$: $p=3.59378\times10^{-48}$
     \item $\mu_{EDH}<\mu_{EWH}$: $p=1.0$
   \end{itemize}  
-  \item $\mu_{F}=\mu_{nF}$: $T=-31.63417$
+  \item $\mu_{F}=\mu_{nF}$: $T=-31.63417, df = 96959$
   \begin{itemize}
     \item $\mu_{F}>\mu_{nF}$: $p=1.0$
     \item $\mu_{F}\neq\mu_{nF}$: $p=1.63522\times10^{-218}$
     \item $\mu_{F}<\mu_{nF}$: $p=8.17611\times10^{-219}$
   \end{itemize}
-  \item $\mu_{1.5}=\mu_{5.0}$: $T=-55.67372$
+  \item $\mu_{1.5}=\mu_{5.0}$: $T=-55.67372, df = 96959$
   \begin{itemize}
     \item $\mu_{1.5}>\mu_{5.0}$: $p=1.0$
     \item $\mu_{1.5}\neq\mu_{5.0}$: $p=0$
@@ -150,20 +161,20 @@ All alternatve hypotheses with p-values less than 0.01 accepted. Graphs showing 
 \section*{Discussion}
 In Short, the results show that:
 \begin{itemize}
-  \item EDH Error Calculation produces more error than EWH Error Calculation, which does not support our hypothesis that EDH Error Calculation produces less error than EWH Error Calculation.
+  \item EDH Error Calculation with 16 buckets produces more error than EWH Error Calculation with 1000 buckets, which does not support our hypothesis that EDH Error Calculation with 16 buckets produces less error than EWH Error Calculation with 1000 buckets.
   \item FreeRun simulations produce less error than Non-Freerun simulations, which does support our hypothesis that FreeRun (asynchronous) simulations produce less error than Non-Freerun (parallel) simulations.
   \item 1.5 FWHM simulations produce less error than 5.0 FWHM simulations, which does not support our hypothesis that FreeRun simulations produce less error than Non-Freerun simulations.
 \end{itemize}
-While some of these results were different from our expectations, they are still explainable observations. some possible (but not necesarily correct) explanations are as follows
+While some of these results were different from our expectations, they are still explainable observations. Some possible explanations are as follows
 \begin{itemize}
-\item EDH error calculation, may be prone to overvaluing shorter but wider peaks like the ones produced by skewed data and undervaluing tall but thin peaks like the ones produced at the actual peak, while EWH error calculation simply measures the highest bucket.
-  \item FreeRun simulations are less prone to producing skewed data, as the point where individual detectors start detecting photons within a cycle varies, thus allowing photons from later into each cycle hit the detector more often.
-  \item Shorter FWHM simulations may produce taller, thinner peaks as the photons are clustered closer together, thus makign the peak stand out from the rest of the data more.
+  \item EDH error calculation may require more than 16 buckets to match the accuraccy of EWH error calculation qith 1000 buckets.
+  \item FreeRun simulations produce less skewed data, thus making their results more closely match reality.
+  \item Higher FWHM simulations may produce wider peaks that that .
 \end{itemize}
 Our findings have a few implications for practial use of SPCs. The specific implications is that when trying to minimize error while taking SPC photographs...
 \begin{itemize}
   \item One should use EWH error caclulation instead of EDH error calculation.
-  \item One should use Asynchronous data collection (Freerunningmode) instead of Parallel data collection.
+  \item One should use Asynchronous data collection (FreeRunning mode) instead of Parallel data collection.
   \item One should set their laser's FWHM to 1.5 instead of 5.0.
 \end{itemize}
 
